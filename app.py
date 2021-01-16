@@ -107,7 +107,7 @@ def bag_of_words(s, words):
     return numpy.array(bag)
 
 def chat():
-    print("Start talking with the bot (type quit to stop) !")
+    print("Hi, I'm the chatbot - How can I help you ? (type quit to stop)")
     while True:
         inp = input("You: ")
         if inp.lower() == "quit":
@@ -116,14 +116,14 @@ def chat():
         results = model.predict([bag_of_words(inp, words)])
         #get the index of the greatest number to predict the correct respond
         results_index = numpy.argmax(results)
-
         tag = labels[results_index]
-
-        for tg in data["intents"]:
-            if tg["tag"] == tag:
-                responses = tg['responses']
-
-                
-        print(random.choice(responses))
+        #if the response predicted close to 75% return the predicted message
+        if results_index > 0.75:
+            for tg in data["intents"]:
+                if tg["tag"] == tag:
+                    responses = tg['responses']
+                    print(random.choice(responses))
+        else:
+            print("Sorry, I didn't get that Can you say it again?")
 
 chat()
